@@ -39,7 +39,7 @@ export default function Products() {
     },
   ];
   return (
-    <div className="my-82 pt-8">
+    <div className="mt-82 pt-8">
       <h1 className="text-5xl text-black/70  text-center ml-10 junge font-semibold">
         it`s your styles, find your clothes styles in here
       </h1>

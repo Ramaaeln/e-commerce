@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${junge.variable}`}
+        className={`data-scroll-behavior="smooth" ${junge.variable}`}
       >
         {children}
       </body>
