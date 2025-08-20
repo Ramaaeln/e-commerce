@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-export default function ProductDetail({ params }: { params: { id: string } }) {
+interface ProductDetailProps {
+  params: { id: string };
+}
+
+export default function ProductDetail({ params }: ProductDetailProps) {
     const datas = [
       { id: 1, name: "Product 1", src: "/products/products1.jpg", description: "This is product 1", price: "$10.00" },
       { id: 2, name: "Product 2", src: "/products/products2.jpg", description: "This is product 2", price: "$20.00" },
@@ -14,7 +18,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
       return(
       <div>
         <Link href='/products'>Back to Products</Link>
-          <h1 className="text-center text-2xl mt-10">Product not found</h1>;
+          <h1 className="text-center text-2xl mt-10">Product not found</h1>
       </div>
       )
     }
