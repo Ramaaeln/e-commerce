@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { MouseEvent } from "react";
 
 export default function Navigation() {
   const [scroll, setScroll] = useState(false);
@@ -16,7 +17,7 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleHomeClick = (e) => {
+  const handleHomeClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (pathname === "/") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -25,15 +26,12 @@ export default function Navigation() {
     }
   };
 
-  // handler umum untuk link dengan hash (#)
-  const handleHashClick = (e, href) => {
+  const handleHashClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const id = href.split("#")[1];
     if (pathname === "/") {
-      // kalau sudah di home langsung scroll
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     } else {
-      // kalau masih di luar home → push ke /#id
       router.push("/#" + id);
     }
   };
@@ -41,7 +39,7 @@ export default function Navigation() {
   const navItems = [
     { href: "/", label: "Home", onClick: handleHomeClick },
     { href: "/products", label: "Products" },
-    { href: "/#about", label: "About Us", onClick: (e) => handleHashClick(e, "/#about") },
+    { href: "/#about", label: "About Us", onClick: (e: MouseEvent<HTMLAnchorElement>) => handleHashClick(e, "/#about") },
     { href: "/contact", label: "Contact" },
   ];
 
@@ -64,7 +62,7 @@ export default function Navigation() {
             key={item.href}
             href={item.href}
             onClick={item.onClick}
-            scroll={false} // penting biar nggak auto reset scroll
+            scroll={false} 
             className={`transition-colors ${
               pathname === item.href
                 ? "font-bold border-b-2 border-black text-yellow-600"

@@ -16,7 +16,7 @@ export default function Hero() {
       height: 200,
       width: 1910,
       className: "-my-82 ",
-      className1:'translate-y-50',
+      className1: 'translate-y-50',
     },
     {
       id: 3,
@@ -24,13 +24,13 @@ export default function Hero() {
       height: 200,
       width: 1910,
       className: "-my-82",
-      className1:'translate-y-20',
+      className1: 'translate-y-20',
     },
   ];
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
 
-  const scroll = (index) => {
+  const scroll = (index: number) => {
     const container = containerRef.current;
     if (container) {
       container.scrollTo({
