@@ -68,10 +68,10 @@ export default function Products() {
               />
             </div>
 
-            <div className="w-[334px]  rounded-b-sm flex flex-col z-10 p-1 -mt-15 absolute  duration-300    group-hover:opacity-0">
+            <div className="w-[334px]  rounded-b-sm flex flex-col z-1 p-1 -mt-15 absolute  duration-300    group-hover:opacity-0">
               <h2 className="text-xl text-white font-bold">{data.name}</h2>
             </div>
-            <div className="w-[334px]  rounded-b-sm flex flex-col z-10 p-1 -mt-15 absolute  bg-white/50 backdrop-blur-xs duration-300   opacity-0 group-hover:opacity-100">
+            <div className="w-[334px]  rounded-b-sm flex flex-col z-1 p-1 -mt-15 absolute  bg-white/50 backdrop-blur-xs duration-300   opacity-0 group-hover:opacity-100">
               <h2 className="text-xl font-bold">{data.name}</h2>
               <p className="text-gray-600">{data.description}</p>                
             </div>

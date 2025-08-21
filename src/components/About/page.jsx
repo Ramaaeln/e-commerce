@@ -15,41 +15,67 @@ export default function About() {
         "Responsive design using TailwindCSS",
       ],
       headline1: "Tech Stack",
-      stack: ["Frontend:", "Backend:", "Database:"],
+      stack: [
+        "/icons/node.svg",
+        "/icons/typescript.svg",
+        "/icons/nextdotjs.svg",
+        "/icons/react.svg",
+        "/icons/go.svg",
+        "/icons/tailwind.svg",
+      ],
     },
     {
       id: 2,
       title: "About Me",
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, aliquid sed ipsa dolore, minima at deleniti qui quibusdam vero veritatis voluptatibus magnam id magni maiores perspiciatis cupiditate vitae, amet autem.",
+        "I am Rama, an Informatics Engineering student with a strong interest in full-stack web development. Through this project, I aim to demonstrate my ability to build modern web applications, implement user authentication systems, and design simple yet functional UI/UX.",
     },
   ];
 
   return (
     <div id="about" className="pt-20 pb-20  h-screen ">
       <div className="bg-yellow-800/50  z-1 text-white text-xl  absolute w-full h-1/2 ">
-        <div className="flex justify-around  text-justify">
+        <div className="flex justify-around my-10 text-justify ">
           {datas.map((data) => (
-            <div key={data.id} className="w-1/3">
-              <h1>{data.title}</h1>
-              <p>{data.description}</p>
+            <div
+              key={data.id}
+              className="w-1/3 p-4 shadow-lg shadow-black/20 hover:scale-105 transition-transform duration-300  rounded-sm bg-white/20"
+            >
+              <h1 className="text-2xl text-center uppercase font-semibold">{data.title}</h1>
+              <p className="leading-relaxed">{data.description}</p>
               {data.headline && <h2 className="mt-1">{data.headline}</h2>}
               {data.features && (
-                <ul className="list-disc pl-5">
+                <ul className="list-none pl-5">
                   {data.features.map((feature, index) => (
-                    <div className="flex gap-3">
-                      <img src="/icons/checklist.svg" height={20} width={20} alt="" />
-                      <span key={index}>{feature}</span> <br />
-                    </div>
+                    <li key={index} className="flex gap-3">
+                      <img
+                        src="/icons/checklist.svg"
+                        height={20}
+                        width={20}
+                        alt=""
+                      />
+                      <span>{feature}</span> <br />
+                    </li>
                   ))}
                 </ul>
-
               )}
               {data.headline1 && <h2 className="mt-1">{data.headline1}</h2>}
               {data.stack && (
-                <ul className="list-disc pl-5">
+                <ul className="flex gap-2 list-none pl-5">
                   {data.stack.map((item, index) => (
-                    <li key={index}>{item}</li>
+                    <li key={index} className="flex  items-center gap-2">
+                      {item.endsWith(".svg") ||
+                      item.endsWith(".png") ||
+                      item.endsWith(".jpg") ? (
+                        <img
+                          src={item}
+                          alt={`stack-${index}`}
+                          className=" h-8 w-8 transition-transform hover:scale-110 hover:drop-shadow-[0_0_12px_#38bdf8]"
+                        />
+                      ) : (
+                        <span>{item}</span>
+                      )}
+                    </li>
                   ))}
                 </ul>
               )}
