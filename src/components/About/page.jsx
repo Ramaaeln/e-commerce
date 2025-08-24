@@ -33,8 +33,8 @@ export default function About() {
   ];
 
   return (
-    <div id="about" className="pt-20 pb-20  h-screen ">
-      <div className="bg-yellow-800/50  z-1 text-white text-xl  absolute w-full h-1/2 ">
+    <div id="about" className="pt-20 mt-50 mb-200 text-lg  ">
+      <div className="bg-yellow-800/50  z-1 text-white text-xl  absolute w-full h-136 ">
         <div className="flex justify-around my-10 text-justify ">
           {datas.map((data) => (
             <div
@@ -42,7 +42,7 @@ export default function About() {
               className="w-1/3 p-4 shadow-lg shadow-black/20 hover:scale-105 transition-transform duration-300  rounded-sm bg-white/20"
             >
               <h1 className="text-2xl text-center uppercase font-semibold">{data.title}</h1>
-              <p className="leading-relaxed">{data.description}</p>
+              <p className="leading-relaxed text-sm">{data.description}</p>
               {data.headline && <h2 className="mt-1">{data.headline}</h2>}
               {data.features && (
                 <ul className="list-none pl-5">
@@ -54,7 +54,7 @@ export default function About() {
                         width={20}
                         alt=""
                       />
-                      <span>{feature}</span> <br />
+                      <span className="text-sm">{feature}</span> <br />
                     </li>
                   ))}
                 </ul>
@@ -85,7 +85,7 @@ export default function About() {
       </div>
       <img
         src="/home/home5.jpg"
-        className="z-0 absolute y-20 w-full h-1/2 object-cover object-[top] "
+        className="z-0 absolute y-20 w-full h-136 object-cover object-[top] "
         alt=""
       />
     </div>

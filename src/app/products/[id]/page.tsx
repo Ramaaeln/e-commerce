@@ -1,33 +1,89 @@
+import Navigation from "@/components/Navigations/page";
 import Link from "next/link";
 
-type ProductDetailPageProps = {
-  params: Promise<{ id: string }>;
-};
+// data dummy sementara (nanti bisa fetch dari DB / API)
+const products = [
+  {
+    id: 1,
+    title: "Baju Atasan",
+    key: "tops",
+    src: "/products/products1.jpg",
+    harga: 1500000,
+    description: "Baju atasan yang nyaman.",
+  },
+  {
+    id: 2,
+    title: "Celana Bahan",
+    key: "bottoms",
+    src: "/products/products3.jpg",
+    harga: 1500000,
+    description: "Celana bahan yang stylish.",
+  },
+  {
+    id: 3,
+    title: "Kemeja",
+    key: "outerwear",
+    src: "/products/products2.jpg",
+    harga: 1500000,
+    description: "Kemeja formal untuk acara resmi.",
+  },
+  {
+    id: 4,
+    title: "Kacamata",
+    key: "accessories",
+    src: "/products/products4.jpg",
+    harga: 1500000,
+    description: "Kacamata trendy untuk melengkapi gaya.",
+  },
+];
 
-export default async function ProductDetail({ params }: ProductDetailPageProps) {
-  const { id } = await params;
-
-  const datas = [
-    { id: 1, name: "Product 1", src: "/products/products1.jpg", description: "This is product 1", price: "$10.00" },
-    { id: 2, name: "Product 2", src: "/products/products2.jpg", description: "This is product 2", price: "$20.00" },
-    { id: 3, name: "Product 3", src: "/products/products3.jpg", description: "This is product 3", price: "$30.00" },
-  ];
-
-  const product = datas.find((item) => item.id.toString() === id);
+export default function ProductDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const product = products.find((p) => p.id === parseInt(params.id));
 
   if (!product) {
-    return <p className="text-red-500">Product not found</p>;
+    return <div className="p-8">Product not found</div>;
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">{product.name}</h1>
-      <img src={product.src} alt={product.name} className="w-64 h-64 object-cover my-4" />
-      <p>{product.description}</p>
-      <p className="text-lg font-semibold">{product.price}</p>
-      <Link href="/products" className="text-blue-500 underline mt-4 block">
-        Back to Products
-      </Link>
+    <div className="">
+        <div className="bg-yellow-600">
+        <Navigation/>
+        </div>
+      <div className="ml-4 ">
+        <Link href="/" className="font-bold text-yellow-600">
+          Home
+        </Link>
+        <span> / </span>
+        <Link href="/products" className="font-bold text-yellow-600">
+          Products
+        </Link>
+        <span> / {product.title}</span>
+      </div>
+
+      <div className="p-8 flex gap-6 overpass">
+        <img
+          src={product.src}
+          alt={product.title}
+          height={600}
+          width={600}
+          className=" object-cover rounded"
+        />
+        <div>
+          <h1 className="text-2xl font-bold">{product.title}</h1>
+          <p className="mt-2">{product.description}</p>
+          <p className="mt-4 text-yellow-600 font-bold text-xl">
+            Rp {product.harga.toLocaleString()}
+          </p>
+
+          <button className="mt-4 px-6 py-2 overpass uppercase w-64 bg-yellow-600 text-white rounded-lg">
+            Buy Now
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

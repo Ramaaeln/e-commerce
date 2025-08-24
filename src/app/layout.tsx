@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
-import { Junge } from "next/font/google"; 
+import { Junge, Julius_Sans_One, Overpass } from "next/font/google"; 
 import "./globals.css";
 
 const junge = Junge({
   weight: "400",         
   subsets: ["latin"],
   variable: "--font-junge"
+})
+
+const julius = Julius_Sans_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-julius"
+})
+
+const overpass = Overpass({
+  weight: "300",
+  subsets: ["latin"],
+  variable: "--font-overpass"
 })
 export const metadata: Metadata = {
   title: "E Commerce App",
@@ -20,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`data-scroll-behavior="smooth" ${junge.variable}`}
+        className={`data-scroll-behavior="smooth" ${overpass.variable} ${julius.variable} ${junge.variable}`}
       >
         {children}
       </body>

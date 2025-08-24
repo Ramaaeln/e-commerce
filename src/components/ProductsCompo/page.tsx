@@ -4,6 +4,7 @@ export default function Products() {
   const datas = [
     {
       id: 1,
+      key:'tops',
       name: "Tops",
       src: "/products/products1.jpg",
       src1: "/products/products3.jpg",
@@ -11,6 +12,7 @@ export default function Products() {
     },
     {
       id: 2,
+      key:'bottoms',
       name: "Bottoms",
       src: "/products/products2.jpg",
       src1: "/products/products4.jpg",
@@ -18,6 +20,7 @@ export default function Products() {
     },
     {
       id: 3,
+      key:'outerwear',
       name: "Outerwear",
       src: "/products/products3.jpg",
       src1: "/products/products1.jpg",
@@ -25,6 +28,7 @@ export default function Products() {
     },
     {
       id: 4,
+      key:'accessories',
       name: "Accessories",
       src: "/products/products4.jpg",
       src1: "/products/products2.jpg",
@@ -32,6 +36,7 @@ export default function Products() {
     },
     {
       id: 5,
+      key:'all',
       name: "Other",
       src: "/products/products4.jpg",
       src1: "/products/products2.jpg",
@@ -39,7 +44,7 @@ export default function Products() {
     },
   ];
   return (
-    <div className="mt-82 pt-8">
+    <div className="mt-122 pt-8">
       <h1 className="text-5xl text-black/70  text-center ml-10 junge font-semibold">
         it`s your styles, find your clothes styles in here
       </h1>
@@ -51,7 +56,7 @@ export default function Products() {
 
       <div className="grid grid-cols-5 gap-8 justify-around mx-12 mt-8">
         {datas.map((data) => (
-          <Link href=''
+          <Link href={`/products?category=${data.key.toLowerCase()}`}
             className="bg-white rounded-sm shadow-xl border border-black/50 group"
             key={data.id}
           >
