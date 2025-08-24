@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigations/page";
 import Link from "next/link";
 
-// data dummy sementara (nanti bisa fetch dari DB / API)
+// data dummy (nanti bisa ganti fetch API/DB)
 const products = [
   {
     id: 1,
@@ -37,23 +37,27 @@ const products = [
   },
 ];
 
-export default function ProductDetailPage({
-  params,
-}: {
-  params: { id: string };
+// ✅ Next.js 15 App Router - params is now a Promise
+export default async function ProductDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
 }) {
-  const product = products.find((p) => p.id === parseInt(params.id));
+  // Await the params Promise
+  const { id } = await params;
+  const product = products.find((p) => p.id === Number(id));
 
   if (!product) {
     return <div className="p-8">Product not found</div>;
   }
 
   return (
-    <div className="">
-        <div className="bg-yellow-600">
-        <Navigation/>
-        </div>
-      <div className="ml-4 ">
+    <div>
+      <div className="bg-yellow-600">
+        <Navigation />
+      </div>
+
+      <div className="ml-4">
         <Link href="/" className="font-bold text-yellow-600">
           Home
         </Link>
@@ -68,15 +72,13 @@ export default function ProductDetailPage({
         <img
           src={product.src}
           alt={product.title}
-          height={600}
-          width={600}
-          className=" object-cover rounded"
+          className="w-[400px] h-[400px] object-cover rounded"
         />
         <div>
           <h1 className="text-2xl font-bold">{product.title}</h1>
           <p className="mt-2">{product.description}</p>
           <p className="mt-4 text-yellow-600 font-bold text-xl">
-            Rp {product.harga.toLocaleString()}
+            Rp {product.harga.toLocaleString("id-ID")}
           </p>
 
           <button className="mt-4 px-6 py-2 overpass uppercase w-64 bg-yellow-600 text-white rounded-lg">
