@@ -25,12 +25,15 @@ const Auth = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSuccess = (successMessage: string) => {
-    if (successMessage) {
-      setMessage(successMessage);
-    }
+  // Updated to match LoginForm's expected interface
+  const handleLoginSuccess = () => {
+    setMessage("Login berhasil! Mengalihkan...");
   };
-  
+
+  // For RegisterForm, if it needs a different signature
+  const handleRegisterSuccess = (successMessage?: string) => {
+    setMessage(successMessage || "Registrasi berhasil!");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -55,12 +58,12 @@ const Auth = () => {
 
           {isLogin ? (
             <LoginForm
-              onSuccess={handleSuccess}
+              onSuccess={handleLoginSuccess}
               onSwitchToRegister={() => setIsLogin(false)}
             />
           ) : (
             <RegisterForm
-              onSuccess={handleSuccess}
+              onSuccess={handleRegisterSuccess}
               onSwitchToLogin={() => setIsLogin(true)}
             />
           )}
