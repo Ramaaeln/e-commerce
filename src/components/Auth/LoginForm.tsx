@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
-import { signInWithEmail, signInWithGoogle } from '../../utils/auth'
+import { useAuth } from '@/context/AuthContext'
 import { validateEmail, sanitizeInput } from '../../utils/validation'
 
 interface LoginFormProps {
@@ -15,18 +15,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
     password: ''
   })
   const [showPassword, setShowPassword] = useState(false)
-  interface Errors {
-    email?: string;
-    password?: string;
-    general?: string;
-    [key: string]: string | undefined; // Add index signature
-  }
-
-  const [errors, setErrors] = useState<Errors>({})
-  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<{[key: string]: string}>({})
+  
+  const { signIn, signInWithGoogle, loading } = useAuth()
 
   const validateForm = () => {
-    const newErrors: Errors = {}
+    const newErrors: {[key: string]: string} = {}
 
     if (!validateEmail(formData.email)) {
       newErrors.email = 'Format email tidak valid'
@@ -44,27 +38,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
     e.preventDefault()
     if (!validateForm()) return
 
-    setLoading(true)
-    
     const sanitizedEmail = sanitizeInput(formData.email)
-    const { data, error } = await signInWithEmail(sanitizedEmail, formData.password)
+    const { error } = await signIn(sanitizedEmail, formData.password)
 
     if (error) {
       setErrors({ general: error })
     } else {
       onSuccess()
     }
-
-    setLoading(false)
   }
 
   const handleGoogleLogin = async () => {
-    setLoading(true)
     const { error } = await signInWithGoogle()
     
     if (error) {
       setErrors({ general: error })
-      setLoading(false)
     }
     // Success will be handled by auth state change
   }

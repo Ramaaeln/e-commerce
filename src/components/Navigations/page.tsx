@@ -62,8 +62,8 @@ export default function Navigation({ className }: { className?: string }) {
             <span>To purchase clothing here, you need an account.</span>
           </div>
           <div className="flex gap-2 justify-end p-1">
-            <Link href="/login" className="p-1">Login</Link>
-            <Link href="/register" className="bg-white text-yellow-600 p-1 rounded">Register</Link>
+            <Link href="/auth" className="p-1">Login</Link>
+            <Link href="/auth" className="bg-white text-yellow-600 p-1 rounded">Register</Link>
           </div>
         </div>
       </div>

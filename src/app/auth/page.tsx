@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Changed from react-router-dom
+import { Suspense } from 'react'
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import LoginForm from "@/components/Auth/LoginForm";
 import RegisterForm from "@/components/Auth/RegisterForm";
@@ -8,13 +9,24 @@ import RegisterForm from "@/components/Auth/RegisterForm";
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [message, setMessage] = useState("");
-  const [mounted, setMounted] = useState(false); // Add hydration handling
-  const router = useRouter(); // Use Next.js router
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   
   // Handle hydration - prevents SSR mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Check for error from callback
+  useEffect(() => {
+    if (mounted) {
+      const error = searchParams.get('error');
+      if (error === 'callback_error') {
+        setMessage("Terjadi kesalahan saat login. Silakan coba lagi.");
+      }
+    }
+  }, [mounted, searchParams]);
 
   const { user, profile, loading } = useAuth();
 
@@ -23,7 +35,9 @@ const Auth = () => {
     if (!mounted || loading) return; // Don't redirect during SSR or loading
     
     if (user) {
-      if (!profile?.username) {
+      // Check if user has completed profile setup
+      // Adjust this condition based on your profile requirements
+      if (!profile?.username && !profile?.full_name) {
         router.push("/auth/username");
       } else {
         router.push("/dashboard");
@@ -77,31 +91,47 @@ const Auth = () => {
 
         <div className="bg-white rounded-lg shadow-md p-8">
           {message && (
-            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-3">
-              <p className="text-sm text-green-600">{message}</p>
+            <div className={`mb-6 border rounded-lg p-3 ${
+              message.includes('kesalahan') || message.includes('error')
+                ? 'bg-red-50 border-red-200'
+                : 'bg-green-50 border-green-200'
+            }`}>
+              <p className={`text-sm ${
+                message.includes('kesalahan') || message.includes('error')
+                  ? 'text-red-600'
+                  : 'text-green-600'
+              }`}>
+                {message}
+              </p>
             </div>
           )}
 
           {isLogin ? (
             <LoginForm
               onSuccess={handleLoginSuccess}
-              onSwitchToRegister={() => setIsLogin(false)}
+              onSwitchToRegister={() => {
+                setIsLogin(false);
+                setMessage(""); // Clear any error messages
+              }}
             />
           ) : (
             <RegisterForm
               onSuccess={handleRegisterSuccess}
-              onSwitchToLogin={() => setIsLogin(true)}
+              onSwitchToLogin={() => {
+                setIsLogin(true);
+                setMessage(""); // Clear any error messages
+              }}
             />
           )}
         </div>
 
         <div className="text-center text-sm text-gray-500">
           <p>Dengan melanjutkan, Anda menyetujui</p>
-          <a href="#" className="text-blue-600 hover:text-blue-800">
+          <a href="/terms" className="text-blue-600 hover:text-blue-800">
             Syarat & Ketentuan
           </a>
           {" dan "}
-          <a href="#" className="text-blue-600 hover:text-blue-800">
+          <a href="/privacy" className="text-blue-600 hover:text-blue-800">
             Kebijakan Privasi
           </a>
         </div>

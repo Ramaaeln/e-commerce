@@ -1,17 +1,13 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { User } from '@supabase/supabase-js';
 
 // Types
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  // Add other user properties as needed
-}
-
 interface Profile {
   username?: string;
-  avatar?: string;
+  full_name?: string;
+  avatar_url?: string;
   // Add other profile properties as needed
 }
 
@@ -19,9 +15,10 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error?: string }>;
+  signInWithGoogle: () => Promise<{ error?: string }>;
+  signOut: () => Promise<void>;
 }
 
 // Create context
@@ -37,117 +34,157 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  const supabase = createClientComponentClient();
 
-  // Initialize auth state on mount
+  // Initialize auth state
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        // Check if user is logged in (check localStorage, cookies, etc.)
-        const token = localStorage.getItem('authToken');
-        
-        if (token) {
-          // Verify token and get user data
-          // This is where you'd call your API to verify the token
-          // For now, we'll just set loading to false
-          
-          // Example:
-          // const userData = await verifyToken(token);
-          // setUser(userData.user);
-          // setProfile(userData.profile);
-        }
-        
-        setLoading(false);
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        // Clear invalid token
-        localStorage.removeItem('authToken');
-        setLoading(false);
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        setUser(session.user);
+        await fetchProfile(session.user.id);
       }
+      
+      setLoading(false);
     };
 
-    initializeAuth();
-  }, []);
+    getInitialSession();
 
-  // Login function
-  const login = async (email: string, password: string) => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          setUser(session.user);
+          await fetchProfile(session.user.id);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setProfile(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  // Fetch user profile
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  // Sign in with email/password
+  const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      
-      // Call your login API here
-      // const response = await signInWithEmail(email, password);
-      
-      // For demo purposes, we'll simulate a successful login
-      const mockUser: User = {
-        id: '1',
-        email: email,
-        name: 'John Doe'
-      };
-      
-      const mockProfile: Profile = {
-        username: 'johndoe'
-      };
-      
-      // Store token (replace with actual token from API)
-      localStorage.setItem('authToken', 'mock-token');
-      
-      setUser(mockUser);
-      setProfile(mockProfile);
-      
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
     } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+      return { error: 'An unexpected error occurred' };
     } finally {
       setLoading(false);
     }
   };
 
-  // Register function
-  const register = async (email: string, password: string, name: string) => {
+  // Sign up with email/password
+  const signUp = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
-      
-      // Call your register API here
-      // const response = await registerWithEmail(email, password, name);
-      
-      // For demo purposes, we'll simulate a successful registration
-      console.log('Registering:', { email, password, name });
-      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          }
+        }
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      // Create profile after successful signup
+      if (data.user) {
+        await supabase.from('profiles').insert({
+          id: data.user.id,
+          full_name: fullName,
+          email: email,
+        });
+      }
+
+      return {};
     } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
+      return { error: 'An unexpected error occurred' };
     } finally {
       setLoading(false);
     }
   };
 
-  // Logout function
-  const logout = async () => {
+  // Sign in with Google
+  const signInWithGoogle = async () => {
     try {
       setLoading(true);
-      
-      // Call your logout API here if needed
-      // await signOut();
-      
-      // Clear local state
-      localStorage.removeItem('authToken');
-      setUser(null);
-      setProfile(null);
-      
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+
+      if (error) {
+        setLoading(false);
+        return { error: error.message };
+      }
+
+      return {};
     } catch (error) {
-      console.error('Logout error:', error);
-      throw error;
-    } finally {
       setLoading(false);
+      return { error: 'An unexpected error occurred' };
     }
+  };
+
+  // Sign out
+  const signOut = async () => {
+    setLoading(true);
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+    setLoading(false);
   };
 
   const value: AuthContextType = {
     user,
     profile,
     loading,
-    login,
-    logout,
-    register,
+    signIn,
+    signUp,
+    signInWithGoogle,
+    signOut,
   };
 
   return (
