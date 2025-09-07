@@ -1,36 +1,62 @@
 "use client";
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Changed from react-router-dom
+import { useAuth } from "@/context/AuthContext";
 import LoginForm from "@/components/Auth/LoginForm";
 import RegisterForm from "@/components/Auth/RegisterForm";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [message, setMessage] = useState("");
+  const [mounted, setMounted] = useState(false); // Add hydration handling
+  const router = useRouter(); // Use Next.js router
+  
+  // Handle hydration - prevents SSR mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { user, profile, loading } = useAuth();
 
-  if (loading) {
+  // Handle redirects with useEffect instead of conditional rendering
+  useEffect(() => {
+    if (!mounted || loading) return; // Don't redirect during SSR or loading
+    
+    if (user) {
+      if (!profile?.username) {
+        router.push("/auth/username");
+      } else {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, profile, mounted, loading, router]);
+
+  // Show loading during SSR, hydration, and auth loading
+  if (!mounted || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
+  // Show loading while redirecting authenticated users (prevents flash)
   if (user) {
-    if (!profile?.username) {
-      return <Navigate to="/auth/username" replace />;
-    }
-    return <Navigate to="/dashboard" replace />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Mengalihkan...</p>
+        </div>
+      </div>
+    );
   }
 
-  // Updated to match LoginForm's expected interface
   const handleLoginSuccess = () => {
     setMessage("Login berhasil! Mengalihkan...");
+    // The redirect will happen automatically via useEffect when user state changes
   };
 
-  // For RegisterForm, if it needs a different signature
   const handleRegisterSuccess = (successMessage?: string) => {
     setMessage(successMessage || "Registrasi berhasil!");
   };

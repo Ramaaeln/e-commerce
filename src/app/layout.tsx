@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Junge, Julius_Sans_One, Overpass } from "next/font/google"; 
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 const junge = Junge({
   weight: "400",         
@@ -34,7 +35,7 @@ export default function RootLayout({
       <body
         className={`data-scroll-behavior="smooth" ${overpass.variable} ${julius.variable} ${junge.variable}`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
