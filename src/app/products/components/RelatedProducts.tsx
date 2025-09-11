@@ -17,7 +17,7 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
   if (products.length === 0) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-8 border-t border-gray-200">
+    <div className="max-w-7xl mx-auto overpass px-8 py-8 border-t border-gray-200">
       <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

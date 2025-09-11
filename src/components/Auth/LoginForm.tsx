@@ -78,7 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             placeholder="Masukkan email"
             required
           />
@@ -99,7 +99,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             placeholder="Masukkan password"
             required
           />
@@ -125,7 +125,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+        className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-yellow-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
       >
         {loading ? 'Masuk...' : 'Masuk'}
       </button>
@@ -160,7 +160,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegister }) 
           <button
             type="button"
             onClick={onSwitchToRegister}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-yellow-600 hover:text-yellow-800 font-medium"
           >
             Daftar di sini
           </button>

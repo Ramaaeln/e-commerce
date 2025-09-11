@@ -30,13 +30,10 @@ const Auth = () => {
 
   const { user, profile, loading } = useAuth();
 
-  // Handle redirects with useEffect instead of conditional rendering
   useEffect(() => {
     if (!mounted || loading) return; // Don't redirect during SSR or loading
     
     if (user) {
-      // Check if user has completed profile setup
-      // Adjust this condition based on your profile requirements
       if (!profile?.username && !profile?.full_name) {
         router.push("/auth/username");
       } else {
@@ -45,7 +42,6 @@ const Auth = () => {
     }
   }, [user, profile, mounted, loading, router]);
 
-  // Show loading during SSR, hydration, and auth loading
   if (!mounted || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -54,7 +50,6 @@ const Auth = () => {
     );
   }
 
-  // Show loading while redirecting authenticated users (prevents flash)
   if (user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -68,7 +63,6 @@ const Auth = () => {
 
   const handleLoginSuccess = () => {
     setMessage("Login berhasil! Mengalihkan...");
-    // The redirect will happen automatically via useEffect when user state changes
   };
 
   const handleRegisterSuccess = (successMessage?: string) => {
@@ -76,7 +70,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br overpass from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -84,8 +78,8 @@ const Auth = () => {
           </h1>
           <p className="mt-2 text-gray-600">
             {isLogin
-              ? "Selamat datang kembali!"
-              : "Bergabunglah dengan kami hari ini"}
+              ? "Selamat datang di Shopifyn! Silakan masuk untuk melanjutkan"
+              : "Bergabunglah dengan kami hari ini untuk melakukan pembelian yang mudah dan cepat!"}
           </p>
         </div>
 
@@ -111,7 +105,7 @@ const Auth = () => {
               onSuccess={handleLoginSuccess}
               onSwitchToRegister={() => {
                 setIsLogin(false);
-                setMessage(""); // Clear any error messages
+                setMessage(""); 
               }}
             />
           ) : (
@@ -119,7 +113,7 @@ const Auth = () => {
               onSuccess={handleRegisterSuccess}
               onSwitchToLogin={() => {
                 setIsLogin(true);
-                setMessage(""); // Clear any error messages
+                setMessage(""); 
               }}
             />
           )}
@@ -127,11 +121,11 @@ const Auth = () => {
 
         <div className="text-center text-sm text-gray-500">
           <p>Dengan melanjutkan, Anda menyetujui</p>
-          <a href="/terms" className="text-blue-600 hover:text-blue-800">
+          <a href="/terms" className="text-yellow-600 hover:text-yellow-800">
             Syarat & Ketentuan
           </a>
           {" dan "}
-          <a href="/privacy" className="text-blue-600 hover:text-blue-800">
+          <a href="/privacy" className="text-yellow-600 hover:text-yellow-800">
             Kebijakan Privasi
           </a>
         </div>

@@ -12,7 +12,7 @@ interface ProductSpecsProps {
 
 export default function ProductSpecs({ specifications }: ProductSpecsProps) {
   return (
-    <div className="max-w-7xl mx-auto px-8 py-8 border-t border-gray-200">
+    <div className="max-w-7xl mx-auto px-8 py-8 overpass border-t border-gray-200">
       <h2 className="text-2xl font-bold mb-6">Product Specifications</h2>
 
       <div className="grid md:grid-cols-2 gap-8">
